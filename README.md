@@ -2,7 +2,11 @@
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FShuakami%2Fproxy)
 
-`proxy` 是一个部署在 Vercel 平台上的高性能、智能缓存代理。它旨在通过多层缓存机制（Vercel Edge Network + Redis）和动态缓存策略，加速对任何公共 URL 的访问，同时显著降低源站负载和带宽成本。
+`proxy` 是一个部署在 Vercel 平台上的高性能、智能缓存的代理系统。
+
+它几乎可以代理任何HTTP请求，包括GET、POST、PUT、DELETE、PATCH等。
+
+得益于多层缓存机制（Vercel Edge Network + Redis）和动态缓存策略，极快的加速对任何公共 URL 的访问，同时显著降低源站负载和带宽成本。
 
 ## 工作原理
 
