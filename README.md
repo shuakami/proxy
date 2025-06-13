@@ -6,7 +6,7 @@
 
 它几乎可以代理任何HTTP请求，包括GET、POST、PUT、DELETE、PATCH等。
 
-得益于多层缓存机制（Vercel Edge Network + Redis）和动态缓存策略，极快的加速对任何公共 URL 的访问，同时显著降低源站负载和带宽成本。
+得益于多层缓存机制（Vercel Edge Network + Redis）和动态缓存策略，它可以极快的加速对任何公共 URL 的访问，同时显著降低源站负载和带宽成本。
 
 ## 工作原理
 

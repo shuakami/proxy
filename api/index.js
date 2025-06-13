@@ -62,10 +62,20 @@ module.exports = async (req, res) => {
   await redis.hincrby(STATS_KEY, 'totalRequests', 1);
   let targetUrl = req.url.slice(1);
 
+  // --- URL Decoding ---
+  targetUrl = decodeURIComponent(targetUrl);
+
   // --- NEW, SIMPLIFIED FIX for URL reconstruction ---
   // This robustly turns "https:/example.com" into "https://example.com"
   if (targetUrl.includes(':/') && !targetUrl.includes('://')) {
       targetUrl = targetUrl.replace(':/', '://');
+  }
+
+  // --- Robustness: Prepend https:// if protocol is missing ---
+  // This handles cases like "github.com/user/repo" instead of "https://github.com/user/repo"
+  if (targetUrl && !targetUrl.startsWith('http') && targetUrl.includes('.')) {
+    console.log(`[REWRITE] Protocol missing. Rewriting URL to: https://${targetUrl}`);
+    targetUrl = `https://` + targetUrl;
   }
 
   if (!targetUrl || !targetUrl.startsWith('http')) {
