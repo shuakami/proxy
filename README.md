@@ -47,13 +47,43 @@ graph TD
 3.  **完成部署**:
     Vercel 会自动完成部署。部署成功后，您就可以开始使用您的代理了。
 
-## 使用方法
+## 使用示例 🚀
 
-部署成功后，您可以像这样使用它：
-`https://<your-vercel-app-name>.vercel.app/https://example.com/some/resource`
+> 这里的proxy.sdjz.wiki 是我自己部署的服务，你也可以换成你自己的域名
 
-这将通过您的代理获取 `https://example.com/some/resource` 的内容。
 
+### 1. 加速 `git clone`
+
+您可以通过代理来克隆任何公共 Git 仓库，这在网络不佳时能显著提升下载速度。
+
+```bash
+# 克隆本项目
+git clone https://proxy.sdjz.wiki/https://github.com/Shuakami/proxy.git
+```
+
+### 2. 代理网页或 API
+
+直接在代理地址后拼接上您想访问的完整 URL 即可。
+
+*   **访问网站**:  
+    [https://proxy.sdjz.wiki/https://www.example.com](https://proxy.sdjz.wiki/https://www.example.com)
+
+*   **代理原始文件** (例如，查看 GitHub 上的文件):  
+    [https://proxy.sdjz.wiki/https://raw.githubusercontent.com/Shuakami/proxy/master/api/index.js](https://proxy.sdjz.wiki/https://raw.githubusercontent.com/Shuakami/proxy/master/api/index.js)
+
+### 3. 加速包管理器下载
+
+您可以临时或永久地为 `npm` 或 `pip` 等包管理器配置代理，以加快依赖安装速度。
+
+*   **NPM 示例**:
+    ```bash
+    npm config set registry https://proxy.sdjz.wiki/https://registry.npmjs.org/
+    ```
+
+*   **Pip 示例**:
+    ```bash
+    pip install --index-url https://proxy.sdjz.wiki/https://pypi.org/simple/ <package_name>
+    ```
 
 ## 许可证
 
