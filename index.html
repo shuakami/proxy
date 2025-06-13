@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proxy V1</title>
+    <title>Proxy - Universal Accelerator</title>
     <link rel="stylesheet" href="/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,30 +14,24 @@
     <main class="content">
         <header>
             <h1 class="title">Proxy</h1>
-            <p class="subtitle">A fast and universal proxy service.</p>
+            <p class="subtitle">Accelerate and unblock any URL.</p>
         </header>
-        <section class="stats">
-            <div class="stat-item">
-                <span class="stat-value loading" id="total-requests">&nbsp;</span>
-                <span class="stat-label">Total Requests</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-value loading" id="cache-hits">&nbsp;</span>
-                <span class="stat-label">Cache Hits</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-value loading" id="data-proxied">&nbsp;</span>
-                <span class="stat-label">Data Proxied</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-value loading" id="git-requests">&nbsp;</span>
-                <span class="stat-label">Git Operations</span>
-            </div>
+        
+        <section class="proxy-form-section">
+            <form id="proxy-form" class="proxy-form">
+                <input type="text" id="url-input" class="proxy-input" placeholder="Enter a URL to proxy, e.g., https://github.com" autocomplete="off" required>
+                <button type="submit" class="proxy-button" aria-label="Proxy URL">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+                        <path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"></path>
+                    </svg>
+                </button>
+            </form>
         </section>
+
     </main>
     <footer style="position: fixed; bottom: 0; left: 0; width: 100%; text-align: center; padding: 1rem; font-size: 0.8rem; color: rgba(255,255,255,0.3); background: linear-gradient(to top, rgba(0,0,0,0.3), transparent);">
-        <p>Version 1.0.0 / Build 20250613 / Powered by <a href="https://github.com/shuakami" target="_blank" style="color: #6ec1e4; text-decoration: none;">Shuakami</a></p>
+        <p><a href="/status.html" style="color: #6ec1e4; text-decoration: none;">View Service Status</a> / Powered by <a href="https://github.com/shuakami" target="_blank" style="color: #6ec1e4; text-decoration: none;">Shuakami</a></p>
     </footer>
-    <script src="/script.js"></script>
+    <script src="/home.js"></script>
 </body>
-</html>
+</html> 
