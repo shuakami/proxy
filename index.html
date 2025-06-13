@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proxy V1</title>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <canvas id="background-canvas"></canvas>
+    <main class="content">
+        <header>
+            <h1 class="title">Proxy</h1>
+            <p class="subtitle">A fast and universal proxy service.</p>
+        </header>
+        <section class="stats">
+            <div class="stat-item">
+                <span class="stat-value loading" id="total-requests">&nbsp;</span>
+                <span class="stat-label">Total Requests</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value loading" id="cache-hits">&nbsp;</span>
+                <span class="stat-label">Cache Hits</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value loading" id="data-proxied">&nbsp;</span>
+                <span class="stat-label">Data Proxied</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value loading" id="git-requests">&nbsp;</span>
+                <span class="stat-label">Git Operations</span>
+            </div>
+        </section>
+    </main>
+    <footer style="position: fixed; bottom: 0; left: 0; width: 100%; text-align: center; padding: 1rem; font-size: 0.8rem; color: rgba(255,255,255,0.3); background: linear-gradient(to top, rgba(0,0,0,0.3), transparent);">
+        <p>Version 1.0.0 / Build 20250613 / Powered by <a href="https://github.com/shuakami" target="_blank" style="color: #6ec1e4; text-decoration: none;">Shuakami</a></p>
+    </footer>
+    <script src="/script.js"></script>
+</body>
+</html>

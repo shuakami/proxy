@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/api/:path*", "destination": "/api/index.js" },
+    { "source": "/(http|https)(:.*)", "destination": "/api/index.js" }
+  ]
+} 
