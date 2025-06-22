@@ -165,43 +165,45 @@ module.exports = async (req, res) => {
     res.setHeader('X-Proxy-Response-Time', responseTime);
     if (isCachable) res.setHeader('X-Cache', 'MISS');
 
-    const headers = {};
+    // Forward headers from the proxied response to the client.
     proxyRes.headers.forEach((value, key) => {
       const lowerKey = key.toLowerCase();
-      if (!['transfer-encoding', 'connection', 'cache-control', 'set-cookie'].includes(lowerKey)) {
-        headers[key] = value;
+      // Filter out headers that are specific to the connection or would interfere.
+      if (!['transfer-encoding', 'connection', 'content-encoding', 'set-cookie', 'cache-control'].includes(lowerKey)) {
         res.setHeader(key, value);
       }
     });
 
-    const bodyBuffer = await proxyRes.buffer();
-    try {
-      await redis.hincrby(STATS_KEY, 'proxiedBytes', bodyBuffer.length);
-    } catch (e) {
-      console.error('Redis hincrby proxiedBytes error:', e);
+    // Update stats with content-length if available, avoiding buffering the body.
+    const contentLength = proxyRes.headers.get('content-length');
+    if (contentLength) {
+        try {
+            await redis.hincrby(STATS_KEY, 'proxiedBytes', parseInt(contentLength, 10));
+        } catch (e) {
+            console.error('Redis hincrby proxiedBytes error:', e);
+        }
     }
-    
+
+    // For cachable GET requests, we rely on Vercel's Edge Caching.
+    // Redis caching of the body is disabled to support streaming large files.
     if (isCachable && proxyRes.ok) {
-        // --- 动态缓存逻辑 ---
         const dynamicCacheSeconds = getDynamicCacheDuration(duration);
         console.log(`[DYNAMIC CACHE] Origin Time: ${duration}ms, Caching for: ${dynamicCacheSeconds}s`);
-
-        // 设置 Vercel Edge 缓存和 Redis 缓存
         res.setHeader('Cache-Control', `public, s-maxage=${dynamicCacheSeconds}, stale-while-revalidate=${dynamicCacheSeconds}`);
-        const cacheEntry = {
-            body: bodyBuffer.toString('base64'), // Store body as base64 string
-            headers,
-            status: proxyRes.status,
-        };
-        try {
-          await redis.set(targetUrl, JSON.stringify(cacheEntry), 'EX', dynamicCacheSeconds);
-        } catch (e) {
-          console.error('Redis SET error:', e);
-        }
     }
     
     res.statusCode = proxyRes.status;
-    res.end(bodyBuffer);
+    
+    // Stream the response body directly to the client.
+    // This is crucial to avoid buffering large files in memory, which causes crashes.
+    return new Promise((resolve) => {
+        proxyRes.body.pipe(res);
+        proxyRes.body.on('end', () => resolve());
+        proxyRes.body.on('error', (err) => {
+            console.error('Proxy stream error:', err);
+            resolve(); // End the function even if the stream breaks.
+        });
+    });
 
   } catch (error) {
     console.error('Proxy Error:', error);
