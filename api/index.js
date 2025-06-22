@@ -60,7 +60,11 @@ module.exports = async (req, res) => {
   }
 
   await redis.hincrby(STATS_KEY, 'totalRequests', 1);
-  let targetUrl = req.url.slice(1);
+  // --- Correctly determine targetUrl from rewrite header or fallback to URL ---
+  const originalUrl = req.headers['x-vercel-rewritten-url'] || req.url;
+  let targetUrl = originalUrl.slice(1);
+
+  console.log(`[INFO] Original request URL: ${originalUrl}, Derived target URL: ${targetUrl}`);
 
   // --- URL Decoding ---
   targetUrl = decodeURIComponent(targetUrl);
