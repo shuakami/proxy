@@ -50,16 +50,40 @@ function getRawBody(req) {
 module.exports = async (req, res) => {
   // --- Handle Stats API Endpoint ---
   if (req.url.startsWith('/api/stats')) {
-    const statsData = await redis.hgetall(STATS_KEY);
-    const stats = {
-      totalRequests: parseInt(statsData.totalRequests, 10) || 0,
-      cacheHits: parseInt(statsData.cacheHits, 10) || 0,
-      gitRequests: parseInt(statsData.gitRequests, 10) || 0,
-      proxiedBytes: parseInt(statsData.proxiedBytes, 10) || 0,
-    };
-    res.setHeader('Content-Type', 'application/json');
-    res.statusCode = 200;
-    return res.end(JSON.stringify(stats));
+    // Handle resetting stats via POST request
+    if (req.method === 'POST' && req.url.endsWith('/reset')) {
+        try {
+            await redis.del(STATS_KEY);
+            console.log('[INFO] Proxy stats have been reset via API.');
+            res.setHeader('Content-Type', 'application/json');
+            res.statusCode = 200;
+            return res.end(JSON.stringify({ message: 'Stats have been reset successfully.' }));
+        } catch(e) {
+            console.error('Redis DEL error during stats reset:', e);
+            res.setHeader('Content-Type', 'application/json');
+            res.statusCode = 500;
+            return res.end(JSON.stringify({ error: 'Failed to reset stats.', details: e.message }));
+        }
+    }
+    
+    // Handle fetching stats via GET request
+    if (req.method === 'GET') {
+        const statsData = await redis.hgetall(STATS_KEY);
+        const stats = {
+          totalRequests: parseInt(statsData.totalRequests, 10) || 0,
+          cacheHits: parseInt(statsData.cacheHits, 10) || 0,
+          gitRequests: parseInt(statsData.gitRequests, 10) || 0,
+          proxiedBytes: parseInt(statsData.proxiedBytes, 10) || 0,
+        };
+        res.setHeader('Content-Type', 'application/json');
+        res.statusCode = 200;
+        return res.end(JSON.stringify(stats));
+    }
+
+    // For other methods to /api/stats, return 405
+    res.statusCode = 405;
+    res.setHeader('Allow', 'GET, POST');
+    return res.end('Method Not Allowed');
   }
 
   try {
@@ -175,11 +199,28 @@ module.exports = async (req, res) => {
       }
     });
 
-    // Update stats with content-length if available, avoiding buffering the body.
+    // --- Accurate Byte Counting ---
+    // To prevent miscounting on ranged requests, we calculate bytes transferred based on status code.
+    let bytesTransferred = 0;
+    const contentRange = proxyRes.headers.get('content-range');
     const contentLength = proxyRes.headers.get('content-length');
-    if (contentLength) {
+
+    if (proxyRes.status === 206 && contentRange) {
+        // For partial content, parse the content-range header (e.g., "bytes 200-1000/67589").
+        const match = contentRange.match(/bytes (\d+)-(\d+)\/\d+/);
+        if (match) {
+            const start = parseInt(match[1], 10);
+            const end = parseInt(match[2], 10);
+            bytesTransferred = end - start + 1;
+        }
+    } else if (contentLength) {
+        // For full responses, use the content-length header.
+        bytesTransferred = parseInt(contentLength, 10);
+    }
+
+    if (bytesTransferred > 0) {
         try {
-            await redis.hincrby(STATS_KEY, 'proxiedBytes', parseInt(contentLength, 10));
+            await redis.hincrby(STATS_KEY, 'proxiedBytes', bytesTransferred);
         } catch (e) {
             console.error('Redis hincrby proxiedBytes error:', e);
         }
