@@ -139,7 +139,8 @@ module.exports = async (req, res) => {
     const outgoingHeaders = {};
     const headersToPreserve = [
       'accept', 'accept-encoding', 'accept-language', 
-      'user-agent', 'dnt', 'content-type', 'content-length'
+      'user-agent', 'dnt', 'content-type', 'content-length',
+      'range' // Crucial for download managers (e.g., IDM) and resuming downloads.
     ];
     for (const header of headersToPreserve) {
       if (req.headers[header]) {
