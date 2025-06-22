@@ -169,7 +169,7 @@ module.exports = async (req, res) => {
     proxyRes.headers.forEach((value, key) => {
       const lowerKey = key.toLowerCase();
       // Filter out headers that are specific to the connection or would interfere.
-      if (!['transfer-encoding', 'connection', 'content-encoding', 'set-cookie', 'cache-control'].includes(lowerKey)) {
+      if (!['transfer-encoding', 'connection', 'set-cookie', 'cache-control'].includes(lowerKey)) {
         res.setHeader(key, value);
       }
     });
