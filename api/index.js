@@ -134,9 +134,22 @@ module.exports = async (req, res) => {
     const requestBody = (req.method !== 'GET' && req.method !== 'HEAD') ? await getRawBody(req) : undefined;
     const startTime = Date.now();
     
+    // Create a new, clean set of headers to forward.
+    // Copying all headers can cause issues with Vercel's routing/Fastly.
+    const outgoingHeaders = {};
+    const headersToPreserve = [
+      'accept', 'accept-encoding', 'accept-language', 
+      'user-agent', 'dnt', 'content-type', 'content-length'
+    ];
+    for (const header of headersToPreserve) {
+      if (req.headers[header]) {
+        outgoingHeaders[header] = req.headers[header];
+      }
+    }
+
     const proxyRes = await fetch(targetUrl, {
       method: req.method,
-      headers: { ...req.headers, host: new URL(targetUrl).host },
+      headers: outgoingHeaders,
       body: requestBody,
       redirect: 'follow',
       compress: false,
