@@ -4,6 +4,9 @@ const Redis = require('ioredis');
 // --- Redis Client Initialization ---
 // The client will automatically use the REDIS_URL from the .env file.
 const redis = new Redis(process.env.REDIS_URL);
+// Add a general error handler to prevent crashing on connection issues
+redis.on('error', (err) => console.error('[Redis Client Error]', err));
+
 const STATS_KEY = 'proxy:stats';
 
 /**
@@ -59,12 +62,15 @@ module.exports = async (req, res) => {
     return res.end(JSON.stringify(stats));
   }
 
-  await redis.hincrby(STATS_KEY, 'totalRequests', 1);
+  try {
+    await redis.hincrby(STATS_KEY, 'totalRequests', 1);
+  } catch (e) {
+    console.error('Redis hincrby totalRequests error:', e);
+  }
+  
   // --- Correctly determine targetUrl from rewrite header or fallback to URL ---
   const originalUrl = req.headers['x-vercel-rewritten-url'] || req.url;
   let targetUrl = originalUrl.slice(1);
-
-  console.log(`[INFO] Original request URL: ${originalUrl}, Derived target URL: ${targetUrl}`);
 
   // --- URL Decoding ---
   targetUrl = decodeURIComponent(targetUrl);
@@ -74,6 +80,9 @@ module.exports = async (req, res) => {
   if (targetUrl.includes(':/') && !targetUrl.includes('://')) {
       targetUrl = targetUrl.replace(':/', '://');
   }
+
+  // Log the final, corrected URL
+  console.log(`[INFO] Attempting to proxy URL: ${targetUrl}`);
 
   // --- Robustness: Prepend https:// if protocol is missing ---
   // This handles cases like "github.com/user/repo" instead of "https://github.com/user/repo"
@@ -153,7 +162,11 @@ module.exports = async (req, res) => {
     });
 
     const bodyBuffer = await proxyRes.buffer();
-    await redis.hincrby(STATS_KEY, 'proxiedBytes', bodyBuffer.length);
+    try {
+      await redis.hincrby(STATS_KEY, 'proxiedBytes', bodyBuffer.length);
+    } catch (e) {
+      console.error('Redis hincrby proxiedBytes error:', e);
+    }
     
     if (isCachable && proxyRes.ok) {
         // --- 动态缓存逻辑 ---
@@ -167,7 +180,11 @@ module.exports = async (req, res) => {
             headers,
             status: proxyRes.status,
         };
-        await redis.set(targetUrl, JSON.stringify(cacheEntry), 'EX', dynamicCacheSeconds);
+        try {
+          await redis.set(targetUrl, JSON.stringify(cacheEntry), 'EX', dynamicCacheSeconds);
+        } catch (e) {
+          console.error('Redis SET error:', e);
+        }
     }
     
     res.statusCode = proxyRes.status;
