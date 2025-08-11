@@ -10,6 +10,25 @@ redis.on('error', (err) => console.error('[Redis Client Error]', err));
 const STATS_KEY = 'proxy:stats';
 
 /**
+ * 设置通用 CORS 头，允许所有来源。
+ * - 允许: *
+ * - 方法: GET,POST,PUT,PATCH,DELETE,OPTIONS,HEAD
+ * - 允许头: 回显预检请求头或使用通配
+ * - 暴露头: 便于前端读取长度/范围/自定义头
+ */
+function setCorsHeaders(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS,HEAD');
+  const reqHeaders = req.headers['access-control-request-headers'];
+  if (reqHeaders) {
+    res.setHeader('Access-Control-Allow-Headers', reqHeaders);
+  } else {
+    res.setHeader('Access-Control-Allow-Headers', '*');
+  }
+  res.setHeader('Access-Control-Expose-Headers', 'Content-Length,Content-Range,Content-Type,Accept-Ranges,X-Cache,X-Cache-Remaining,X-Proxy-Response-Time');
+}
+
+/**
  * 根据源站的响应时间动态计算缓存时长。
  * 源站越慢，缓存时间越长，以减少对其的请求。
  * @param {number} responseTimeMs - 源站响应时间（毫秒）。
@@ -48,6 +67,13 @@ function getRawBody(req) {
  * @param {import('http').ServerResponse} res
  */
 module.exports = async (req, res) => {
+  // --- Handle CORS Preflight ---
+  if (req.method === 'OPTIONS') {
+    setCorsHeaders(req, res);
+    res.statusCode = 204;
+    return res.end();
+  }
+
   // --- Handle Stats API Endpoint ---
   if (req.url.startsWith('/api/stats')) {
     // Handle resetting stats via POST request
@@ -56,11 +82,13 @@ module.exports = async (req, res) => {
             await redis.del(STATS_KEY);
             console.log('[INFO] Proxy stats have been reset via API.');
             res.setHeader('Content-Type', 'application/json');
+            setCorsHeaders(req, res);
             res.statusCode = 200;
             return res.end(JSON.stringify({ message: 'Stats have been reset successfully.' }));
         } catch(e) {
             console.error('Redis DEL error during stats reset:', e);
             res.setHeader('Content-Type', 'application/json');
+            setCorsHeaders(req, res);
             res.statusCode = 500;
             return res.end(JSON.stringify({ error: 'Failed to reset stats.', details: e.message }));
         }
@@ -76,6 +104,7 @@ module.exports = async (req, res) => {
           proxiedBytes: parseInt(statsData.proxiedBytes, 10) || 0,
         };
         res.setHeader('Content-Type', 'application/json');
+        setCorsHeaders(req, res);
         res.statusCode = 200;
         return res.end(JSON.stringify(stats));
     }
@@ -83,6 +112,7 @@ module.exports = async (req, res) => {
     // For other methods to /api/stats, return 405
     res.statusCode = 405;
     res.setHeader('Allow', 'GET, POST');
+    setCorsHeaders(req, res);
     return res.end('Method Not Allowed');
   }
 
@@ -117,6 +147,7 @@ module.exports = async (req, res) => {
 
   if (!targetUrl || !targetUrl.startsWith('http')) {
     res.statusCode = 400;
+    setCorsHeaders(req, res);
     return res.end('Bad Request: Please provide a valid URL to proxy.');
   }
 
@@ -145,6 +176,7 @@ module.exports = async (req, res) => {
         }
         
         Object.entries(cached.headers).forEach(([key, value]) => res.setHeader(key, value));
+        setCorsHeaders(req, res);
         res.statusCode = cached.status;
         return res.end(Buffer.from(cached.body, 'base64'));
       }
@@ -234,6 +266,8 @@ module.exports = async (req, res) => {
         res.setHeader('Cache-Control', `public, s-maxage=${dynamicCacheSeconds}, stale-while-revalidate=${dynamicCacheSeconds}`);
     }
     
+    // Always set permissive CORS headers on the final response to the browser
+    setCorsHeaders(req, res);
     res.statusCode = proxyRes.status;
     
     // Stream the response body directly to the client.
@@ -251,6 +285,7 @@ module.exports = async (req, res) => {
     console.error('Proxy Error:', error);
     res.statusCode = 500;
     res.setHeader('Content-Type', 'application/json');
+    setCorsHeaders(req, res);
     res.end(JSON.stringify({ error: 'Proxy encountered an error.', details: error.message }));
   }
 }; 
