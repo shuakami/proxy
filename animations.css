@@ -19,3 +19,240 @@
     visibility: hidden;
     transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear 0.2s;
 }
+
+/* --- Page Enter Animations --- */
+@keyframes pageEnter {
+    0% {
+        opacity: 0;
+        transform: scale(0.98);
+        filter: blur(1px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0);
+    }
+}
+
+@keyframes contentFadeIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes gentleFadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* --- Apply page animations --- */
+/* 移除body动画，避免影响固定定位布局 */
+
+.main-content {
+    animation: pageEnter 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.1s backwards;
+}
+
+.guide-section,
+.docs-section,
+.nodes-section,
+.stats-section {
+    animation: gentleFadeIn 1s cubic-bezier(0.4, 0, 0.2, 1) 0.2s backwards;
+}
+
+/* --- Form Elements Animation --- */
+.proxy-form {
+    animation: contentFadeIn 1s cubic-bezier(0.4, 0, 0.2, 1) 0.3s backwards;
+}
+
+.proxy-input,
+.proxy-button {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.proxy-input:focus {
+    transform: scale(1.01);
+}
+
+.proxy-button:hover {
+    transform: scale(1.02);
+}
+
+.proxy-button:active {
+    transform: scale(0.98);
+}
+
+/* --- Icons and Interactive Elements --- */
+.nav-link,
+.status-bar-item,
+.language-switch,
+.mobile-menu-btn {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-link:hover {
+    transform: scale(1.02);
+}
+
+.nav-link:active,
+.status-bar-item:active,
+.language-switch:active,
+.mobile-menu-btn:active {
+    transform: scale(0.95);
+}
+
+/* --- Logo Animation --- */
+.main-logo,
+.logo-image {
+    animation: gentleFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.4s backwards;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.main-logo:hover {
+    transform: scale(1.05);
+}
+
+/* --- Text Content Fade In --- */
+.subtitle,
+.docs-content p,
+.nodes-content p {
+    animation: gentleFadeIn 1.2s cubic-bezier(0.4, 0, 0.2, 1) 0.5s backwards;
+}
+
+/* --- Stats Animation --- */
+.stat-row {
+    animation: gentleFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) calc(0.6s + var(--delay, 0s)) backwards;
+}
+
+.stat-row:nth-child(1) { --delay: 0s; }
+.stat-row:nth-child(2) { --delay: 0.1s; }
+.stat-row:nth-child(3) { --delay: 0.2s; }
+.stat-row:nth-child(4) { --delay: 0.3s; }
+
+/* --- Status Bar Animation --- */
+.status-bar {
+    animation: gentleFadeIn 1s cubic-bezier(0.4, 0, 0.2, 1) 0.8s backwards;
+}
+
+/* --- Mobile Header Animation --- */
+.mobile-header {
+    animation: gentleFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.2s backwards;
+}
+
+/* --- Smooth transitions for dynamic content --- */
+.status-title,
+.docs-header h2,
+.nodes-header h2,
+.stats-header h2 {
+    animation: contentFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.4s backwards;
+}
+
+/* --- Page Navigation Transitions --- */
+.nav-link.active {
+    transform: scale(1.01);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --- Loading State Animations --- */
+.stat-value.loading {
+    animation: gentlePulse 1.5s ease-in-out infinite;
+}
+
+@keyframes gentlePulse {
+    0%, 100% {
+        opacity: 0.6;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.01);
+    }
+}
+
+/* --- Accessibility: Reduce motion for users who prefer it --- */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    
+    .main-content,
+    .guide-section,
+    .docs-section,
+    .nodes-section,
+    .stats-section,
+    .proxy-form,
+    .main-logo,
+    .logo-image,
+    .subtitle,
+    .docs-content p,
+    .nodes-content p,
+    .stat-row,
+    .status-bar,
+    .mobile-header,
+    .status-title,
+    .docs-header h2,
+    .nodes-header h2,
+    .stats-header h2 {
+        animation: none;
+    }
+}
+
+/* --- Initial state for animated elements --- */
+.main-content,
+.guide-section,
+.docs-section,
+.nodes-section,
+.stats-section,
+.proxy-form,
+.main-logo,
+.logo-image,
+.subtitle,
+.docs-content p,
+.nodes-content p,
+.stat-row,
+.status-bar,
+.mobile-header,
+.status-title,
+.docs-header h2,
+.nodes-header h2,
+.stats-header h2 {
+    opacity: 0;
+}
+
+/* --- Ensure animations play correctly --- */
+@media (prefers-reduced-motion: no-preference) {
+    .main-content,
+    .guide-section,
+    .docs-section,
+    .nodes-section,
+    .stats-section,
+    .proxy-form,
+    .main-logo,
+    .logo-image,
+    .subtitle,
+    .docs-content p,
+    .nodes-content p,
+    .stat-row,
+    .status-bar,
+    .mobile-header,
+    .status-title,
+    .docs-header h2,
+    .nodes-header h2,
+    .stats-header h2 {
+        opacity: 0;
+        animation-fill-mode: both;
+    }
+}

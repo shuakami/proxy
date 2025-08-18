@@ -84,33 +84,7 @@ class LanguageManager {
             mobileSwitch.addEventListener('click', () => this.toggleLanguage());
         }
 
-        // Mobile menu functionality
-        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('mobile-overlay');
 
-        if (mobileMenuBtn && sidebar && overlay) {
-            mobileMenuBtn.addEventListener('click', () => {
-                sidebar.classList.toggle('mobile-open');
-                overlay.classList.toggle('active');
-            });
-
-            overlay.addEventListener('click', () => {
-                sidebar.classList.remove('mobile-open');
-                overlay.classList.remove('active');
-            });
-
-            // Close menu when clicking nav links on mobile
-            const navLinks = sidebar.querySelectorAll('.nav-link');
-            navLinks.forEach(link => {
-                link.addEventListener('click', () => {
-                    if (window.innerWidth <= 768) {
-                        sidebar.classList.remove('mobile-open');
-                        overlay.classList.remove('active');
-                    }
-                });
-            });
-        }
     }
 
     toggleLanguage() {
