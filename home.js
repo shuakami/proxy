@@ -7,6 +7,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const proxyForm = document.getElementById('proxy-form');
     const urlInput = document.getElementById('url-input');
 
+    // Reset input state when page loads (fixes issue when user returns from proxy page)
+    function resetInputState() {
+        if (urlInput) {
+            urlInput.disabled = false;
+            urlInput.classList.remove('loading');
+            urlInput.value = ''; // Clear any existing value
+        }
+    }
+
+    // Call reset function immediately
+    resetInputState();
+
+    // Reset input state when page becomes visible (e.g., user switches back to tab)
+    document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) {
+            resetInputState();
+        }
+    });
+
+    // Reset input state when window regains focus
+    window.addEventListener('focus', resetInputState);
+
     // Mobile menu elements
     const mobileMenuBtn = document.getElementById('mobile-menu-btn');
     const mobileOverlay = document.getElementById('mobile-overlay');
