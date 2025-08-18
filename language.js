@@ -1,7 +1,7 @@
 // Language switching functionality
 class LanguageManager {
     constructor() {
-        this.currentLang = localStorage.getItem('language') || 'en';
+        this.currentLang = localStorage.getItem('language') || 'zh';
         this.translations = {
             en: {
                 'page.title': 'Proxy V2 - Universal Accelerator',

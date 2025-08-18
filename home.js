@@ -17,12 +17,12 @@ document.addEventListener('DOMContentLoaded', () => {
         let nodeInfo = '';
         let flagClass = '';
         
-        if (hostname.includes('proxy.sdjz.wiki') || hostname === 'proxy.sdjz.wiki') {
-            nodeInfo = 'JP (Tokyo)';
-            flagClass = 'fi-jp';
-        } else if (hostname.includes('hk.sdjz.wiki') || hostname === 'hk.sdjz.wiki') {
+        if (hostname.includes('hk.') || hostname.includes('hk.proxy.sdjz.wiki') || hostname === 'hk.proxy.sdjz.wiki') {
             nodeInfo = 'HK (Hong Kong)';
             flagClass = 'fi-hk';
+        } else if (hostname.includes('proxy.sdjz.wiki') || hostname === 'proxy.sdjz.wiki') {
+            nodeInfo = 'JP (Tokyo)';
+            flagClass = 'fi-jp';
         } else {
             nodeInfo = 'Local Dev';
             flagClass = '';
