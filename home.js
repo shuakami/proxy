@@ -1,96 +1,114 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- Particle Background (Copied from original script.js) ---
-    const canvas = document.getElementById('background-canvas');
-    const ctx = canvas.getContext('2d');
+    // Initialize Feather Icons
+    feather.replace();
 
-    let width, height;
-    let particles = [];
-    const PARTICLE_COUNT = 150;
-    
-    function resize() {
-        width = canvas.width = window.innerWidth;
-        height = canvas.height = window.innerHeight;
-        particles = [];
-        for (let i = 0; i < PARTICLE_COUNT; i++) {
-            particles.push(new Particle());
-        }
-    }
-
-    class Particle {
-        constructor(isBurst = false) {
-            this.isBurst = isBurst;
-            if (isBurst) {
-                this.x = Math.random() * width;
-                this.y = Math.random() * height;
-                const angle = Math.random() * Math.PI * 2;
-                const speed = Math.random() * 4 + 2;
-                this.vx = Math.cos(angle) * speed;
-                this.vy = Math.sin(angle) * speed;
-                this.lifespan = 60; // Frames
-                this.radius = Math.random() * 2 + 1;
-            } else {
-                this.x = Math.random() * width;
-                this.y = Math.random() * height;
-                this.vx = Math.random() * 0.3 - 0.15;
-                this.vy = Math.random() * 0.3 - 0.15;
-                this.radius = Math.random() * 1.5 + 0.5;
-            }
-        }
-
-        update() {
-            if (this.isBurst) {
-                this.lifespan--;
-                this.vx *= 0.95;
-                this.vy *= 0.95;
-            }
-            this.x += this.vx;
-            this.y += this.vy;
-
-            if (!this.isBurst) {
-                if (this.x < 0 || this.x > width) this.vx *= -1;
-                if (this.y < 0 || this.y > height) this.vy *= -1;
-            }
-        }
-
-        draw() {
-            const alpha = this.isBurst ? Math.max(0, this.lifespan / 60) : 0.7;
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
-            ctx.fill();
-        }
-    }
-
-    function animate() {
-        ctx.clearRect(0, 0, width, height);
-        particles = particles.filter(p => !p.isBurst || p.lifespan > 0);
-        for (const particle of particles) {
-            particle.update();
-            particle.draw();
-        }
-        requestAnimationFrame(animate);
-    }
-
-    // --- Proxy Form Logic ---
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggle = document.getElementById('sidebar-toggle');
     const proxyForm = document.getElementById('proxy-form');
     const urlInput = document.getElementById('url-input');
 
-    proxyForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        let url = urlInput.value.trim();
+    // Mobile menu elements
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileOverlay = document.getElementById('mobile-overlay');
 
-        if (!url) {
-            return;
+    // --- Status Bar Node Detection ---
+    function updateStatusBarNode() {
+        const hostname = window.location.hostname;
+        let nodeInfo = '';
+        let flagClass = '';
+        
+        if (hostname.includes('proxy.sdjz.wiki') || hostname === 'proxy.sdjz.wiki') {
+            nodeInfo = 'JP (Tokyo)';
+            flagClass = 'fi-jp';
+        } else if (hostname.includes('hk.sdjz.wiki') || hostname === 'hk.sdjz.wiki') {
+            nodeInfo = 'HK (Hong Kong)';
+            flagClass = 'fi-hk';
+        } else {
+            nodeInfo = 'Local Dev';
+            flagClass = '';
         }
+        
+        // Update status bar items that show node info
+        const statusItems = document.querySelectorAll('.status-bar-item');
+        statusItems.forEach(item => {
+            const span = item.querySelector('span');
+            if (span && (span.textContent.includes('Proxy v1.0') || span.textContent.includes('Proxy v2.0'))) {
+                if (flagClass) {
+                    span.innerHTML = `<span class="fi ${flagClass}" style="margin-right: 0.5rem;"></span>${nodeInfo} - Proxy v2.0`;
+                } else {
+                    span.textContent = `${nodeInfo} - Proxy v2.0`;
+                }
+            }
+        });
+    }
 
-        if (!/^https?:\/\//i.test(url)) {
-            url = 'https://' + url;
+    // Call the function to update status bar
+    updateStatusBarNode();
+
+    // --- Sidebar Toggle Functionality ---
+    if (sidebarToggle && sidebar) {
+        sidebarToggle.addEventListener('click', () => {
+            // Only toggle collapsed state on desktop
+            if (window.innerWidth > 768) {
+                sidebar.classList.toggle('collapsed');
+            }
+        });
+    }
+
+    // --- Mobile Menu Functionality ---
+    if (mobileMenuBtn && sidebar && mobileOverlay) {
+        mobileMenuBtn.addEventListener('click', () => {
+            console.log('Mobile menu button clicked'); // Debug log
+            sidebar.classList.toggle('mobile-open');
+            mobileOverlay.classList.toggle('active');
+        });
+
+        mobileOverlay.addEventListener('click', () => {
+            sidebar.classList.remove('mobile-open');
+            mobileOverlay.classList.remove('active');
+        });
+
+        // Close mobile menu when clicking nav links
+        const navLinks = sidebar.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    sidebar.classList.remove('mobile-open');
+                    mobileOverlay.classList.remove('active');
+                }
+            });
+        });
+    }
+
+    // --- Handle Window Resize ---
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) {
+            // Reset mobile menu state on desktop
+            sidebar.classList.remove('mobile-open');
+            if (mobileOverlay) {
+                mobileOverlay.classList.remove('active');
+            }
         }
-
-        window.location.href = `/${url}`;
     });
 
-    window.addEventListener('resize', resize);
-    resize();
-    animate();
+    // --- Proxy Form Submission ---
+    if (proxyForm) {
+        proxyForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const url = urlInput.value.trim();
+            if (url) {
+                // Add loading effect to input
+                urlInput.classList.add('loading');
+                urlInput.disabled = true;
+                
+                // Simulate processing time for better UX
+                setTimeout(() => {
+                    // Construct the proxied URL and navigate to it.
+                    // It's better to navigate directly than to use fetch,
+                    // as this correctly handles all content types and redirects.
+                    window.location.href = `/${url}`;
+                }, 800);
+            }
+        });
+    }
 }); 

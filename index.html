@@ -1,37 +1,126 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en" data-lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proxy - Universal Accelerator</title>
+    <title data-i18n="page.title">Proxy V2 - Universal Accelerator</title>
     <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/animations.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/css/flag-icons.min.css"/>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"></script>
 </head>
 <body>
-    <canvas id="background-canvas"></canvas>
-    <main class="content">
-        <header>
-            <h1 class="title">Proxy</h1>
-            <p class="subtitle">Accelerate and unblock any URL.</p>
-        </header>
-        
-        <section class="proxy-form-section">
-            <form id="proxy-form" class="proxy-form">
-                <input type="text" id="url-input" class="proxy-input" placeholder="Enter a URL to proxy, e.g., https://github.com" autocomplete="off" required>
-                <button type="submit" class="proxy-button" aria-label="Proxy URL">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
-                        <path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"></path>
-                    </svg>
-                </button>
-            </form>
-        </section>
+    <!-- Mobile Header -->
+    <header class="mobile-header">
+        <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle Menu">
+            <i data-feather="menu"></i>
+        </button>
+        <div class="mobile-logo">
+            <img src="/logo.png" alt="Proxy Logo">
+        </div>
+        <button class="language-switch-mobile" id="language-switch-mobile">EN</button>
+    </header>
 
-    </main>
-    <footer style="position: fixed; bottom: 0; left: 0; width: 100%; text-align: center; padding: 1rem; font-size: 0.8rem; color: rgba(255,255,255,0.3); background: linear-gradient(to top, rgba(0,0,0,0.3), transparent);">
-        <p><a href="/status.html" style="color: #6ec1e4; text-decoration: none;">View Service Status</a> / Powered by <a href="https://github.com/shuakami" target="_blank" style="color: #6ec1e4; text-decoration: none;">Shuakami</a></p>
+    <!-- Mobile Overlay -->
+    <div class="mobile-overlay" id="mobile-overlay"></div>
+
+    <div class="container">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="/" class="logo">
+                    <img src="/logo.png" alt="Proxy Logo" class="logo-image">
+                </a>
+                <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle Sidebar">
+                    <i data-feather="menu"></i>
+                </button>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="/" class="nav-link active"><i data-feather="home"></i><span data-i18n="nav.home">Home</span></a>
+                <a href="/status.html" class="nav-link"><i data-feather="bar-chart-2"></i><span data-i18n="nav.status">Service Status</span></a>
+                <a href="https://github.com/shuakami/proxy" target="_blank" class="nav-link"><i data-feather="github"></i><span data-i18n="nav.source">Source Code</span></a>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="language-switch" id="language-switch">EN</button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <section class="guide-section">
+                <div class="form-container">
+                    <img src="/logo.png" alt="Proxy Logo" class="main-logo">
+                    <p class="subtitle" data-i18n="home.subtitle">A minimal, high-performance universal acceleration proxy.</p>
+                    <form id="proxy-form" class="proxy-form">
+                        <i data-feather="link" class="input-icon"></i>
+                        <input type="text" id="url-input" class="proxy-input" data-i18n-placeholder="home.input.placeholder" placeholder="Enter URL to proxy, e.g.: https://github.com" autocomplete="off" required>
+                        <button type="submit" class="proxy-button" aria-label="Proxy URL">
+                            <i data-feather="arrow-right"></i>
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <section class="docs-section">
+                <div class="docs-header">
+                    <i data-feather="book-open"></i>
+                    <h2 data-i18n="docs.title">How to Use</h2>
+                </div>
+                <div class="docs-content">
+                    <p data-i18n="docs.description">This service can proxy and accelerate any URL. Usage is very simple:</p>
+                    <pre><code>{your_proxy_domain}/{target_url}</code></pre>
+                    <p data-i18n="docs.example">For example, to proxy GitHub resources, you can construct the URL like this:</p>
+                    <pre><code>https://proxy.sdjz.wiki/https://github.com/some/resource</code></pre>
+                    <p data-i18n="docs.benefits">This is very useful for accelerating access to slow foreign resources or solving network accessibility issues.</p>
+                </div>
+            </section>
+
+            <section class="nodes-section">
+                <div class="nodes-header">
+                    <i data-feather="server"></i>
+                    <h2 data-i18n="nodes.title">Available Nodes</h2>
+                </div>
+                <div class="nodes-content">
+                    <p>
+                        <span data-i18n="nodes.description">Proxy currently has two nodes:</span>
+                        <span class="fi fi-jp"></span> 
+                        <span data-i18n="nodes.jp">JP (Tokyo, Japan)</span> 
+                        <a href="https://proxy.sdjz.wiki" target="_blank" class="node-address">proxy.sdjz.wiki</a> 
+                        <span data-i18n="nodes.and">and</span> 
+                        <span class="fi fi-hk"></span> 
+                        <span data-i18n="nodes.hk">HK (Hong Kong, China)</span> 
+                        <a href="https://hk.sdjz.wiki" target="_blank" class="node-address">hk.sdjz.wiki</a>. 
+                        <span data-i18n="nodes.choice">You can choose the best node according to your network environment, data is now synchronized between nodes.</span>
+                    </p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <footer class="status-bar">
+        <div class="status-bar-left">
+            <a href="https://github.com/shuakami/proxy" class="status-bar-item" target="_blank">
+                <i data-feather="github" class="status-bar-icon"></i>
+                <span data-i18n="statusBar.source">Source</span>
+            </a>
+            <div class="status-bar-item">
+                <i data-feather="check-circle" class="status-bar-icon"></i>
+                <span data-i18n="statusBar.status">Status: Online</span>
+            </div>
+        </div>
+        <div class="status-bar-right">
+            <div class="status-bar-item">
+                <i data-feather="server" class="status-bar-icon"></i>
+                <span>Proxy v2.0</span>
+            </div>
+            <a href="https://github.com/shuakami" class="status-bar-item" target="_blank">
+                <span data-i18n="statusBar.powered">Powered by Shuakami</span>
+            </a>
+        </div>
     </footer>
+
+    <script src="/language.js"></script>
     <script src="/home.js"></script>
 </body>
-</html> 
+</html>

@@ -1,43 +1,112 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en" data-lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proxy V1</title>
+    <title data-i18n="status.title">Service Status - Proxy V2</title>
     <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/animations.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/css/flag-icons.min.css"/>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"></script>
 </head>
 <body>
-    <canvas id="background-canvas"></canvas>
-    <main class="content">
-        <header>
-            <h1 class="title">Proxy</h1>
-            <p class="subtitle">A fast and universal proxy service.</p>
-        </header>
-        <section class="stats">
-            <div class="stat-item">
-                <span class="stat-value loading" id="total-requests">&nbsp;</span>
-                <span class="stat-label">Total Requests</span>
+    <!-- Mobile Header -->
+    <header class="mobile-header">
+        <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle Menu">
+            <i data-feather="menu"></i>
+        </button>
+        <div class="mobile-logo">
+            <img src="/logo.png" alt="Proxy Logo">
+        </div>
+        <button class="language-switch-mobile" id="language-switch-mobile">EN</button>
+    </header>
+
+    <!-- Mobile Overlay -->
+    <div class="mobile-overlay" id="mobile-overlay"></div>
+
+    <div class="container">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="/" class="logo">
+                    <img src="/logo.png" alt="Proxy Logo" class="logo-image">
+                </a>
+                <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle Sidebar">
+                    <i data-feather="menu"></i>
+                </button>
             </div>
-            <div class="stat-item">
-                <span class="stat-value loading" id="cache-hits">&nbsp;</span>
-                <span class="stat-label">Cache Hits</span>
+            <nav class="sidebar-nav">
+                <a href="/" class="nav-link"><i data-feather="home"></i><span data-i18n="nav.home">Home</span></a>
+                <a href="/status.html" class="nav-link active"><i data-feather="bar-chart-2"></i><span data-i18n="nav.status">Service Status</span></a>
+                <a href="https://github.com/shuakami/proxy" target="_blank" class="nav-link"><i data-feather="github"></i><span data-i18n="nav.source">Source Code</span></a>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="language-switch" id="language-switch">EN</button>
             </div>
-            <div class="stat-item">
-                <span class="stat-value loading" id="data-proxied">&nbsp;</span>
-                <span class="stat-label">Data Proxied</span>
+        </aside>
+
+        <main class="main-content">
+            <section class="guide-section">
+                <div class="form-container">
+                    <img src="/logo.png" alt="Proxy Logo" class="main-logo">
+                    <h1 class="status-title" data-i18n="status.heading">Service Status</h1>
+                    <p class="subtitle" data-i18n="status.subtitle">Real-time monitoring of Proxy service status and statistics</p>
+                </div>
+            </section>
+
+            <section class="stats-section">
+                <div class="stats-header">
+                    <i data-feather="activity"></i>
+                    <h2 data-i18n="status.realtime">Real-time Statistics</h2>
+                </div>
+                <div class="stats-content">
+                    <div class="stat-row">
+                        <span class="stat-label" data-i18n="status.stats.totalRequests">Total Requests</span>
+                        <span class="stat-value loading" id="total-requests">&nbsp;</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label" data-i18n="status.stats.cacheHits">Cache Hits</span>
+                        <span class="stat-value loading" id="cache-hits">&nbsp;</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label" data-i18n="status.stats.gitRequests">Git Operations</span>
+                        <span class="stat-value loading" id="git-requests">&nbsp;</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label" data-i18n="status.stats.dataProxied">Data Transferred</span>
+                        <span class="stat-value loading" id="data-proxied">&nbsp;</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <footer class="status-bar">
+        <div class="status-bar-left">
+            <a href="https://github.com/shuakami/proxy" class="status-bar-item" target="_blank">
+                <i data-feather="github" class="status-bar-icon"></i>
+                <span data-i18n="statusBar.source">Source</span>
+            </a>
+            <div class="status-bar-item">
+                <i data-feather="check-circle" class="status-bar-icon"></i>
+                <span data-i18n="statusBar.status">Status: Online</span>
             </div>
-            <div class="stat-item">
-                <span class="stat-value loading" id="git-requests">&nbsp;</span>
-                <span class="stat-label">Git Operations</span>
+        </div>
+        <div class="status-bar-right">
+            <div class="status-bar-item">
+                <i data-feather="server" class="status-bar-icon"></i>
+                <span>Proxy v2.0</span>
             </div>
-        </section>
-    </main>
-    <footer style="position: fixed; bottom: 0; left: 0; width: 100%; text-align: center; padding: 1rem; font-size: 0.8rem; color: rgba(255,255,255,0.3); background: linear-gradient(to top, rgba(0,0,0,0.3), transparent);">
-        <p>Version 1.0.0 / Build 20250613 / Powered by <a href="https://github.com/shuakami" target="_blank" style="color: #6ec1e4; text-decoration: none;">Shuakami</a></p>
+            <a href="https://github.com/shuakami" class="status-bar-item" target="_blank">
+                <span data-i18n="statusBar.powered">Powered by Shuakami</span>
+            </a>
+        </div>
     </footer>
+
+    <script src="/language.js"></script>
+    <script src="/home.js"></script>
     <script src="/script.js"></script>
 </body>
 </html>

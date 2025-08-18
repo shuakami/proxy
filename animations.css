@@ -1,0 +1,21 @@
+/* --- Sidebar Transition --- */
+.sidebar {
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --- Content Fade Transition --- */
+.nav-link span,
+.logo-image {
+    white-space: nowrap;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --- Hide content when sidebar is collapsed --- */
+.sidebar.collapsed .nav-link span,
+.sidebar.collapsed .logo-image {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear 0.2s;
+}
