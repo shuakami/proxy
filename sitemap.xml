@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+    <url>
+        <loc>https://proxy.sdjz.wiki/</loc>
+        <lastmod>2025-08-18</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://proxy.sdjz.wiki/" />
+        <xhtml:link rel="alternate" hreflang="zh" href="https://proxy.sdjz.wiki/" />
+    </url>
+    <url>
+        <loc>https://proxy.sdjz.wiki/status.html</loc>
+        <lastmod>2025-08-18</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.8</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://proxy.sdjz.wiki/status.html" />
+        <xhtml:link rel="alternate" hreflang="zh" href="https://proxy.sdjz.wiki/status.html" />
+    </url>
+    <url>
+        <loc>https://proxy.sdjz.wiki/news.html</loc>
+        <lastmod>2025-08-18</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://proxy.sdjz.wiki/news.html" />
+        <xhtml:link rel="alternate" hreflang="zh" href="https://proxy.sdjz.wiki/news.html" />
+    </url>
+    <url>
+        <loc>https://hk.proxy.sdjz.wiki/</loc>
+        <lastmod>2025-08-18</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hk.proxy.sdjz.wiki/" />
+        <xhtml:link rel="alternate" hreflang="zh" href="https://hk.proxy.sdjz.wiki/" />
+    </url>
+    <url>
+        <loc>https://hk.proxy.sdjz.wiki/status.html</loc>
+        <lastmod>2025-08-18</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.7</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://hk.proxy.sdjz.wiki/status.html" />
+        <xhtml:link rel="alternate" hreflang="zh" href="https://hk.proxy.sdjz.wiki/status.html" />
+    </url>
+</urlset>

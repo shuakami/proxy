@@ -1,0 +1,24 @@
+User-agent: *
+Allow: /
+
+# Allow all main pages
+Allow: /index.html
+Allow: /status.html
+
+# Allow static resources
+Allow: /style.css
+Allow: /animations.css
+Allow: /script.js
+Allow: /home.js
+Allow: /status.js
+Allow: /language.js
+Allow: /logo.png
+
+# Disallow API endpoints from indexing
+Disallow: /api/
+
+# Sitemap location
+Sitemap: https://proxy.sdjz.wiki/sitemap.xml
+
+# Crawl delay
+Crawl-delay: 1

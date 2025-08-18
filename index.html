@@ -4,6 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-i18n="page.title">Proxy V2 - Universal Accelerator</title>
+    <meta name="description" content="高性能通用代理加速服务，支持GitHub、Google API等海外资源加速访问。免费、快速、稳定。High-performance universal proxy service for accelerating access to overseas resources.">
+    <meta name="keywords" content="proxy, 代理, 加速, GitHub, Google API, 网络加速, CDN, 免费代理, 海外资源, acceleration, universal proxy">
+    <meta name="author" content="Shuakami">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#2563eb">
+    <link rel="canonical" href="https://proxy.sdjz.wiki/">
+    <link rel="alternate" hreflang="en" href="https://proxy.sdjz.wiki/">
+    <link rel="alternate" hreflang="zh" href="https://proxy.sdjz.wiki/">
+    <link rel="alternate" hreflang="zh-CN" href="https://proxy.sdjz.wiki/">
+    <link rel="alternate" hreflang="zh-TW" href="https://proxy.sdjz.wiki/">
+    <link rel="alternate" hreflang="ja" href="https://proxy.sdjz.wiki/">
+    <link rel="alternate" hreflang="x-default" href="https://proxy.sdjz.wiki/">
+    
+    <!-- Favicon and Icons -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://proxy.sdjz.wiki/">
+    <meta property="og:title" content="Proxy V2 - Universal Accelerator">
+    <meta property="og:description" content="高性能通用代理加速服务，支持GitHub、Google API等海外资源加速访问。免费、快速、稳定。">
+    <meta property="og:image" content="https://proxy.sdjz.wiki/logo.png">
+    <meta property="og:site_name" content="Proxy V2">
+    <meta property="og:locale" content="en_US">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://proxy.sdjz.wiki/">
+    <meta property="twitter:title" content="Proxy V2 - Universal Accelerator">
+    <meta property="twitter:description" content="高性能通用代理加速服务，支持GitHub、Google API等海外资源加速访问。免费、快速、稳定。">
+    <meta property="twitter:image" content="https://proxy.sdjz.wiki/logo.png">
+    
+    <!-- Additional SEO -->
+    <meta name="application-name" content="Proxy V2">
+    <meta name="msapplication-TileColor" content="#2563eb">
+    <meta name="msapplication-config" content="/browserconfig.xml">
     <link rel="stylesheet" href="/style.css">
     <link rel="stylesheet" href="/animations.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/css/flag-icons.min.css"/>
@@ -11,6 +51,59 @@
     <link rel="preconnect" href="https://hk.proxy.sdjz.wiki/https://fonts.gstatic.com" crossorigin>
     <link href="https://hk.proxy.sdjz.wiki/https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"></script>
+    
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Proxy V2",
+        "url": "https://proxy.sdjz.wiki",
+        "description": "高性能通用代理加速服务，支持GitHub、Google API等海外资源加速访问。免费、快速、稳定。",
+        "applicationCategory": "NetworkApplication",
+        "operatingSystem": "Any",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "creator": {
+            "@type": "Organization",
+            "name": "Shuakami",
+            "url": "https://github.com/shuakami"
+        },
+        "logo": "https://proxy.sdjz.wiki/logo.png",
+        "sameAs": [
+            "https://github.com/shuakami/proxy"
+        ],
+        "featureList": [
+            "Universal proxy acceleration",
+            "GitHub resources acceleration",
+            "Google API acceleration",
+            "Intelligent caching",
+            "Real-time statistics",
+            "Multi-node support"
+        ],
+        "serviceType": "Proxy Service",
+        "areaServed": "Worldwide"
+    }
+    </script>
+    
+    <!-- Breadcrumb Navigation Schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "首页",
+                "item": "https://proxy.sdjz.wiki/"
+            }
+        ]
+    }
+    </script>
 </head>
 <body>
     <!-- Mobile Header -->
@@ -40,6 +133,7 @@
             <nav class="sidebar-nav">
                 <a href="/" class="nav-link active"><i data-feather="home"></i><span data-i18n="nav.home">Home</span></a>
                 <a href="/status.html" class="nav-link"><i data-feather="bar-chart-2"></i><span data-i18n="nav.status">Service Status</span></a>
+                <a href="/news.html" class="nav-link"><i data-feather="bell"></i><span data-i18n="nav.news">最新动态</span></a>
                 <a href="https://github.com/shuakami/proxy" target="_blank" class="nav-link"><i data-feather="github"></i><span data-i18n="nav.source">Source Code</span></a>
             </nav>
             <div class="sidebar-footer">
@@ -47,51 +141,52 @@
             </div>
         </aside>
 
-        <main class="main-content">
-            <section class="guide-section">
+        <main class="main-content" role="main">
+            <header class="guide-section">
                 <div class="form-container">
-                    <img src="/logo.png" alt="Proxy Logo" class="main-logo">
-                    <p class="subtitle" data-i18n="home.subtitle">A minimal, high-performance universal acceleration proxy.</p>
-                    <form id="proxy-form" class="proxy-form">
-                        <i data-feather="link" class="input-icon"></i>
-                        <input type="text" id="url-input" class="proxy-input" data-i18n-placeholder="home.input.placeholder" placeholder="Enter URL to proxy, e.g.: https://github.com" autocomplete="off" required>
-                        <button type="submit" class="proxy-button" aria-label="Proxy URL">
-                            <i data-feather="arrow-right"></i>
+                    <img src="/logo.png" alt="Proxy V2 Universal Accelerator Logo" class="main-logo">
+                    <h1 class="visually-hidden">Proxy V2 - 免费高性能代理加速服务</h1>
+                    <p class="subtitle" data-i18n="home.subtitle">A minimal, high-performance universal acceleration proxy for GitHub, Google API, and global resources. 高性能免费代理服务，支持GitHub、Google API等全球资源加速访问。</p>
+                    <form id="proxy-form" class="proxy-form" role="search" aria-label="URL代理输入表单">
+                        <i data-feather="link" class="input-icon" aria-hidden="true"></i>
+                        <input type="url" id="url-input" class="proxy-input" data-i18n-placeholder="home.input.placeholder" placeholder="输入需要代理的URL，例如：https://github.com" autocomplete="off" required aria-label="输入要代理加速的URL地址">
+                        <button type="submit" class="proxy-button" aria-label="开始代理加速">
+                            <i data-feather="arrow-right" aria-hidden="true"></i>
                         </button>
                     </form>
                 </div>
-            </section>
+            </header>
 
-            <section class="docs-section">
+            <section class="docs-section" aria-labelledby="usage-heading">
                 <div class="docs-header">
-                    <i data-feather="book-open"></i>
-                    <h2 data-i18n="docs.title">How to Use</h2>
+                    <i data-feather="book-open" aria-hidden="true"></i>
+                    <h2 id="usage-heading" data-i18n="docs.title">代理使用教程 - How to Use Proxy Service</h2>
                 </div>
                 <div class="docs-content">
-                    <p data-i18n="docs.description">This service can proxy and accelerate any URL. Usage is very simple:</p>
+                    <p data-i18n="docs.description">本代理服务可以加速任何URL访问，支持GitHub代理、Google API代理、NPM代理等。使用方法非常简单：This universal proxy service can accelerate any URL access, supporting GitHub proxy, Google API proxy, NPM proxy, etc. Usage is very simple:</p>
                     <pre><code>{proxy_domain}/{target_url}</code></pre>
-                    <p data-i18n="docs.example">For example, to proxy GitHub resources, you can construct the URL like this:</p>
+                    <p data-i18n="docs.example">例如，要代理GitHub资源，可以这样构建URL。For example, to proxy GitHub resources, you can construct the URL like this:</p>
                     <pre><code id="example-url">https://proxy.sdjz.wiki/https://github.com/some/resource</code></pre>
-                    <p data-i18n="docs.benefits">This is very useful for accelerating access to slow foreign resources or solving network accessibility issues.</p>
+                    <p data-i18n="docs.benefits">这对于加速访问海外资源、解决网络访问问题、提高开发效率非常有用。支持CORS跨域、智能缓存、多节点负载均衡。This is very useful for accelerating access to overseas resources, solving network accessibility issues, and improving development efficiency. Supports CORS, intelligent caching, and multi-node load balancing.</p>
                 </div>
             </section>
 
-            <section class="nodes-section">
+            <section class="nodes-section" aria-labelledby="nodes-heading">
                 <div class="nodes-header">
-                    <i data-feather="server"></i>
-                    <h2 data-i18n="nodes.title">Available Nodes</h2>
+                    <i data-feather="server" aria-hidden="true"></i>
+                    <h2 id="nodes-heading" data-i18n="nodes.title">全球节点 - Global CDN Nodes</h2>
                 </div>
                 <div class="nodes-content">
                     <p>
-                        <span data-i18n="nodes.description">Proxy currently has two nodes:</span>
-                        <span class="fi fi-jp"></span> 
-                        <span data-i18n="nodes.jp">JP (Tokyo, Japan)</span> 
-                        <a href="https://proxy.sdjz.wiki" target="_blank" class="node-address">proxy.sdjz.wiki</a> 
-                        <span data-i18n="nodes.and">and</span> 
-                        <span class="fi fi-hk"></span> 
-                        <span data-i18n="nodes.hk">HK (Hong Kong, China)</span> 
-                        <a href="https://hk.proxy.sdjz.wiki" target="_blank" class="node-address">hk.proxy.sdjz.wiki</a>. 
-                        <span data-i18n="nodes.choice">You can choose the best node according to your network environment, data is now synchronized between nodes.</span>
+                        <span data-i18n="nodes.description">Proxy V2目前提供两个高速节点：Proxy currently has two high-speed nodes:</span>
+                        <span class="fi fi-jp" aria-label="日本国旗"></span> 
+                        <span data-i18n="nodes.jp">日本东京节点 JP (Tokyo, Japan)</span> 
+                        <a href="https://proxy.sdjz.wiki" target="_blank" class="node-address" rel="noopener">proxy.sdjz.wiki</a> 
+                        <span data-i18n="nodes.and">和 and</span> 
+                        <span class="fi fi-hk" aria-label="香港特别行政区旗"></span> 
+                        <span data-i18n="nodes.hk">香港节点 HK (Hong Kong, China)</span> 
+                        <a href="https://hk.proxy.sdjz.wiki" target="_blank" class="node-address" rel="noopener">hk.proxy.sdjz.wiki</a>。 
+                        <span data-i18n="nodes.choice">您可以根据网络环境选择最佳节点，两个节点数据已实现同步，提供7x24小时稳定服务。You can choose the best node according to your network environment. Data is synchronized between nodes, providing 24/7 stable service.</span>
                     </p>
                 </div>
             </section>
