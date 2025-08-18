@@ -124,7 +124,7 @@ module.exports = async (req, res) => {
   
   // --- Correctly determine targetUrl from rewrite header or fallback to URL ---
   const originalUrl = req.headers['x-vercel-rewritten-url'] || req.url;
-  // With the new rewrite `/:path((?!api/).*)`, the full URL is simply the originalUrl without the leading slash.
+  // With the rewrite `/((?!api/).*)`, the full URL is simply the originalUrl without the leading slash.
   let targetUrl = originalUrl.slice(1);
 
   // --- URL Decoding ---
