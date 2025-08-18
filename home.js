@@ -33,21 +33,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const mobileMenuBtn = document.getElementById('mobile-menu-btn');
     const mobileOverlay = document.getElementById('mobile-overlay');
 
-    // --- Status Bar Node Detection ---
+    // --- Status Bar Node Detection & Dynamic URL Update ---
     function updateStatusBarNode() {
         const hostname = window.location.hostname;
         let nodeInfo = '';
         let flagClass = '';
+        let currentDomain = '';
         
         if (hostname.includes('hk.') || hostname.includes('hk.proxy.sdjz.wiki') || hostname === 'hk.proxy.sdjz.wiki') {
             nodeInfo = 'HK (Hong Kong)';
             flagClass = 'fi-hk';
+            currentDomain = 'hk.proxy.sdjz.wiki';
         } else if (hostname.includes('proxy.sdjz.wiki') || hostname === 'proxy.sdjz.wiki') {
             nodeInfo = 'JP (Tokyo)';
             flagClass = 'fi-jp';
+            currentDomain = 'proxy.sdjz.wiki';
         } else {
             nodeInfo = 'Local Dev';
             flagClass = '';
+            currentDomain = hostname + (window.location.port ? ':' + window.location.port : '');
         }
         
         // Update status bar items that show node info
@@ -62,6 +66,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         });
+
+        // Update example URL dynamically
+        const exampleUrlElement = document.getElementById('example-url');
+        if (exampleUrlElement) {
+            const protocol = window.location.protocol; // http: or https:
+            exampleUrlElement.textContent = `${protocol}//${currentDomain}/https://github.com/some/resource`;
+        }
     }
 
     // Call the function to update status bar
