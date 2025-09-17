@@ -275,14 +275,19 @@ module.exports = async (req, res) => {
     // --- Font CSS Processing for Google Fonts ---
     // Check if this is a Google Fonts CSS request that needs URL replacement
     const contentType = proxyRes.headers.get('content-type') || '';
+    
+    // Only process if it's definitely a CSS file, not a font file
+    const isFontFile = /\.(woff2?|ttf|eot|otf)(\?|$)/i.test(targetUrl);
     const isFontsCssRequest = targetUrl.includes('fonts.googleapis.com/css') && 
-                              contentType.includes('text/css');
+                              contentType.includes('text/css') && 
+                              !isFontFile;
     
     // Add debug logging for all font-related requests
     const isFontDomain = targetUrl.includes('fonts.googleapis.com') || targetUrl.includes('fonts.gstatic.com');
     if (isFontDomain) {
       console.log(`[FONT DEBUG] URL: ${targetUrl}`);
       console.log(`[FONT DEBUG] Content-Type: ${contentType}`);
+      console.log(`[FONT DEBUG] Is Font File: ${isFontFile}`);
       console.log(`[FONT DEBUG] Is CSS Request: ${isFontsCssRequest}`);
       console.log(`[FONT DEBUG] Response Status: ${proxyRes.status}`);
     }
