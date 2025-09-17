@@ -279,8 +279,14 @@ module.exports = async (req, res) => {
     
     if (isFontsCssRequest && proxyRes.ok) {
       try {
-        // Read the CSS content
-        const cssContent = await proxyRes.text();
+        // Clone the response to avoid consuming the body stream
+        const clonedResponse = proxyRes.clone();
+        const cssContent = await clonedResponse.text();
+        
+        // Validate that we actually got CSS content
+        if (!cssContent || typeof cssContent !== 'string') {
+          throw new Error('Invalid CSS content received');
+        }
         
         // Get the current proxy base URL from the request
         // Extract from either x-forwarded-host or host header, defaulting to a fallback
@@ -295,22 +301,25 @@ module.exports = async (req, res) => {
           `url(${proxyBaseUrl}/$1)`
         );
         
-        console.log(`[FONT PROXY] Processed CSS with ${(cssContent.match(/url\(https:\/\/fonts\.gstatic\.com\//g) || []).length} font URLs replaced`);
+        const urlsReplaced = (cssContent.match(/url\(https:\/\/fonts\.gstatic\.com\//g) || []).length;
+        console.log(`[FONT PROXY] Successfully processed CSS with ${urlsReplaced} font URLs replaced`);
         
-        // Remove encoding-related headers since we're sending uncompressed content
+        // Clear any encoding-related headers
         res.removeHeader('content-encoding');
         res.removeHeader('transfer-encoding');
+        res.removeHeader('content-length');
         
         // Set appropriate headers for the modified CSS
         res.setHeader('Content-Type', 'text/css; charset=utf-8');
         res.setHeader('Content-Length', Buffer.byteLength(modifiedCss, 'utf8'));
+        res.setHeader('Cache-Control', 'public, max-age=3600'); // Cache for 1 hour
         
         // Return the modified CSS
-        return res.end(modifiedCss);
+        return res.end(modifiedCss, 'utf8');
         
       } catch (error) {
-        console.error('Font CSS processing error:', error);
-        // Fall back to streaming if processing fails
+        console.error('Font CSS processing error:', error.message);
+        // Fall back to streaming the original response if processing fails
       }
     }
 
