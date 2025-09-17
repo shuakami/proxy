@@ -271,7 +271,45 @@ module.exports = async (req, res) => {
     setCorsHeaders(req, res);
     res.statusCode = proxyRes.status;
     
-    // Stream the response body directly to the client.
+    // --- Font CSS Processing for Google Fonts ---
+    // Check if this is a Google Fonts CSS request that needs URL replacement
+    const isFontsCssRequest = targetUrl.includes('fonts.googleapis.com/css') && 
+                              proxyRes.headers.get('content-type')?.includes('text/css');
+    
+    if (isFontsCssRequest && proxyRes.ok) {
+      try {
+        // Read the CSS content
+        const cssContent = await proxyRes.text();
+        
+        // Get the current proxy base URL from the request
+        // Extract from either x-forwarded-host or host header, defaulting to a fallback
+        const proxyHost = req.headers['x-forwarded-host'] || req.headers['host'] || 'proxy.sdjz.wiki';
+        const proxyBaseUrl = `https://${proxyHost}`;
+        
+        // Replace font URLs in the CSS content
+        // This replaces: url(https://fonts.gstatic.com/...)
+        // With: url(https://proxy.sdjz.wiki/https://fonts.gstatic.com/...)
+        const modifiedCss = cssContent.replace(
+          /url\((https:\/\/fonts\.gstatic\.com\/[^)]+)\)/g,
+          `url(${proxyBaseUrl}/$1)`
+        );
+        
+        console.log(`[FONT PROXY] Processed CSS with ${(cssContent.match(/url\(https:\/\/fonts\.gstatic\.com\//g) || []).length} font URLs replaced`);
+        
+        // Set appropriate headers
+        res.setHeader('Content-Type', 'text/css; charset=utf-8');
+        res.setHeader('Content-Length', Buffer.byteLength(modifiedCss, 'utf8'));
+        
+        // Return the modified CSS
+        return res.end(modifiedCss);
+        
+      } catch (error) {
+        console.error('Font CSS processing error:', error);
+        // Fall back to streaming if processing fails
+      }
+    }
+
+    // Stream the response body directly to the client for all other requests.
     // This is crucial to avoid buffering large files in memory, which causes crashes.
     return new Promise((resolve) => {
         proxyRes.body.pipe(res);
