@@ -210,7 +210,7 @@ module.exports = async (req, res) => {
       headers: outgoingHeaders,
       body: requestBody,
       redirect: 'follow',
-      compress: true,
+      compress: false,
     });
     
     const duration = Date.now() - startTime;
@@ -227,8 +227,7 @@ module.exports = async (req, res) => {
     proxyRes.headers.forEach((value, key) => {
       const lowerKey = key.toLowerCase();
       // Filter out headers that are specific to the connection or would interfere.
-      // Also filter out encoding headers to prevent conflicts when we modify content
-      if (!['transfer-encoding', 'connection', 'set-cookie', 'cache-control', 'content-encoding'].includes(lowerKey)) {
+      if (!['transfer-encoding', 'connection', 'set-cookie', 'cache-control'].includes(lowerKey)) {
         res.setHeader(key, value);
       }
     });
@@ -272,74 +271,7 @@ module.exports = async (req, res) => {
     setCorsHeaders(req, res);
     res.statusCode = proxyRes.status;
     
-    // --- Font CSS Processing for Google Fonts ---
-    // Check if this is a Google Fonts CSS request that needs URL replacement
-    const contentType = proxyRes.headers.get('content-type') || '';
-    
-    // Only process if it's definitely a CSS file, not a font file
-    const isFontFile = /\.(woff2?|ttf|eot|otf)(\?|$)/i.test(targetUrl);
-    const isFontsCssRequest = targetUrl.includes('fonts.googleapis.com/css') && 
-                              contentType.includes('text/css') && 
-                              !isFontFile;
-    
-    // Add debug logging for all font-related requests
-    const isFontDomain = targetUrl.includes('fonts.googleapis.com') || targetUrl.includes('fonts.gstatic.com');
-    if (isFontDomain) {
-      console.log(`[FONT DEBUG] URL: ${targetUrl}`);
-      console.log(`[FONT DEBUG] Content-Type: ${contentType}`);
-      console.log(`[FONT DEBUG] Is Font File: ${isFontFile}`);
-      console.log(`[FONT DEBUG] Is CSS Request: ${isFontsCssRequest}`);
-      console.log(`[FONT DEBUG] Response Status: ${proxyRes.status}`);
-    }
-    
-    if (isFontsCssRequest && proxyRes.ok) {
-      try {
-        // Clone the response to avoid consuming the body stream
-        const clonedResponse = proxyRes.clone();
-        const cssContent = await clonedResponse.text();
-        
-        // Validate that we actually got CSS content and it looks like CSS
-        if (!cssContent || typeof cssContent !== 'string' || !cssContent.includes('@font-face')) {
-          console.log(`[FONT DEBUG] Invalid CSS content or no @font-face found`);
-          throw new Error('Invalid CSS content received');
-        }
-        
-        // Get the current proxy base URL from the request
-        // Extract from either x-forwarded-host or host header, defaulting to a fallback
-        const proxyHost = req.headers['x-forwarded-host'] || req.headers['host'] || 'proxy.sdjz.wiki';
-        const proxyBaseUrl = `https://${proxyHost}`;
-        
-        // Replace font URLs in the CSS content
-        // This replaces: url(https://fonts.gstatic.com/...)
-        // With: url(https://proxy.sdjz.wiki/https://fonts.gstatic.com/...)
-        const modifiedCss = cssContent.replace(
-          /url\((https:\/\/fonts\.gstatic\.com\/[^)]+)\)/g,
-          `url(${proxyBaseUrl}/$1)`
-        );
-        
-        const urlsReplaced = (cssContent.match(/url\(https:\/\/fonts\.gstatic\.com\//g) || []).length;
-        console.log(`[FONT PROXY] Successfully processed CSS with ${urlsReplaced} font URLs replaced`);
-        
-        // Clear any encoding-related headers that might have been set
-        ['content-encoding', 'transfer-encoding', 'content-length'].forEach(header => {
-          res.removeHeader(header);
-        });
-        
-        // Set appropriate headers for the modified CSS
-        res.setHeader('Content-Type', 'text/css; charset=utf-8');
-        res.setHeader('Content-Length', Buffer.byteLength(modifiedCss, 'utf8'));
-        res.setHeader('Cache-Control', 'public, max-age=3600'); // Cache for 1 hour
-        
-        // Return the modified CSS
-        return res.end(modifiedCss, 'utf8');
-        
-      } catch (error) {
-        console.error('Font CSS processing error:', error.message);
-        // Fall back to streaming the original response if processing fails
-      }
-    }
-
-    // Stream the response body directly to the client for all other requests.
+    // Stream the response body directly to the client.
     // This is crucial to avoid buffering large files in memory, which causes crashes.
     return new Promise((resolve) => {
         proxyRes.body.pipe(res);
