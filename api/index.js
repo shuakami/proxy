@@ -274,8 +274,18 @@ module.exports = async (req, res) => {
     
     // --- Font CSS Processing for Google Fonts ---
     // Check if this is a Google Fonts CSS request that needs URL replacement
+    const contentType = proxyRes.headers.get('content-type') || '';
     const isFontsCssRequest = targetUrl.includes('fonts.googleapis.com/css') && 
-                              proxyRes.headers.get('content-type')?.includes('text/css');
+                              contentType.includes('text/css');
+    
+    // Add debug logging for all font-related requests
+    const isFontDomain = targetUrl.includes('fonts.googleapis.com') || targetUrl.includes('fonts.gstatic.com');
+    if (isFontDomain) {
+      console.log(`[FONT DEBUG] URL: ${targetUrl}`);
+      console.log(`[FONT DEBUG] Content-Type: ${contentType}`);
+      console.log(`[FONT DEBUG] Is CSS Request: ${isFontsCssRequest}`);
+      console.log(`[FONT DEBUG] Response Status: ${proxyRes.status}`);
+    }
     
     if (isFontsCssRequest && proxyRes.ok) {
       try {
@@ -283,8 +293,9 @@ module.exports = async (req, res) => {
         const clonedResponse = proxyRes.clone();
         const cssContent = await clonedResponse.text();
         
-        // Validate that we actually got CSS content
-        if (!cssContent || typeof cssContent !== 'string') {
+        // Validate that we actually got CSS content and it looks like CSS
+        if (!cssContent || typeof cssContent !== 'string' || !cssContent.includes('@font-face')) {
+          console.log(`[FONT DEBUG] Invalid CSS content or no @font-face found`);
           throw new Error('Invalid CSS content received');
         }
         
@@ -304,10 +315,10 @@ module.exports = async (req, res) => {
         const urlsReplaced = (cssContent.match(/url\(https:\/\/fonts\.gstatic\.com\//g) || []).length;
         console.log(`[FONT PROXY] Successfully processed CSS with ${urlsReplaced} font URLs replaced`);
         
-        // Clear any encoding-related headers
-        res.removeHeader('content-encoding');
-        res.removeHeader('transfer-encoding');
-        res.removeHeader('content-length');
+        // Clear any encoding-related headers that might have been set
+        ['content-encoding', 'transfer-encoding', 'content-length'].forEach(header => {
+          res.removeHeader(header);
+        });
         
         // Set appropriate headers for the modified CSS
         res.setHeader('Content-Type', 'text/css; charset=utf-8');
