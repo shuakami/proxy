@@ -210,7 +210,7 @@ module.exports = async (req, res) => {
       headers: outgoingHeaders,
       body: requestBody,
       redirect: 'follow',
-      compress: false,
+      compress: true,
     });
     
     const duration = Date.now() - startTime;
@@ -227,7 +227,8 @@ module.exports = async (req, res) => {
     proxyRes.headers.forEach((value, key) => {
       const lowerKey = key.toLowerCase();
       // Filter out headers that are specific to the connection or would interfere.
-      if (!['transfer-encoding', 'connection', 'set-cookie', 'cache-control'].includes(lowerKey)) {
+      // Also filter out encoding headers to prevent conflicts when we modify content
+      if (!['transfer-encoding', 'connection', 'set-cookie', 'cache-control', 'content-encoding'].includes(lowerKey)) {
         res.setHeader(key, value);
       }
     });
