@@ -296,7 +296,11 @@ module.exports = async (req, res) => {
         
         console.log(`[FONT PROXY] Processed CSS with ${(cssContent.match(/url\(https:\/\/fonts\.gstatic\.com\//g) || []).length} font URLs replaced`);
         
-        // Set appropriate headers
+        // Remove encoding-related headers since we're sending uncompressed content
+        res.removeHeader('content-encoding');
+        res.removeHeader('transfer-encoding');
+        
+        // Set appropriate headers for the modified CSS
         res.setHeader('Content-Type', 'text/css; charset=utf-8');
         res.setHeader('Content-Length', Buffer.byteLength(modifiedCss, 'utf8'));
         
